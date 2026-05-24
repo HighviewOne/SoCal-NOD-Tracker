@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Reproduction guide
+    url: https://github.com/HighviewOne/SoCal-NOD-Tracker#reproducing-this-project
+    about: Step-by-step instructions for standing up the pipeline yourself.

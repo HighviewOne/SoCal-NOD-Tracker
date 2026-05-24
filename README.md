@@ -1,6 +1,27 @@
-# SoCal NOD Tracker
+<div align="center">
 
-> An end-to-end data pipeline tracking **Notice of Default (NOD)** filings across Southern California — a leading indicator of foreclosure activity.
+<img src="assets/banner.svg" alt="SoCal NOD Tracker" width="100%" />
+
+<br/>
+
+An end-to-end data pipeline tracking **Notice of Default (NOD)** filings across Southern California — a leading indicator of foreclosure activity.
+
+<br/>
+
+[![Google Cloud](https://img.shields.io/badge/Google_Cloud-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com)
+[![Terraform](https://img.shields.io/badge/Terraform-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io)
+[![Kestra](https://img.shields.io/badge/Kestra-7E3FFF?logo=kestra&logoColor=white)](https://kestra.io)
+[![BigQuery](https://img.shields.io/badge/BigQuery-669DF6?logo=googlebigquery&logoColor=white)](https://cloud.google.com/bigquery)
+[![dbt](https://img.shields.io/badge/dbt-FF694B?logo=dbt&logoColor=white)](https://www.getdbt.com)
+[![Looker Studio](https://img.shields.io/badge/Looker_Studio-F9AB00?logo=looker&logoColor=white)](https://lookerstudio.google.com)
+[![Python](https://img.shields.io/badge/Python_3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org)
+
+![Counties](https://img.shields.io/badge/counties-6-4285F4)
+![Schedule](https://img.shields.io/badge/refresh-daily%20%C2%B7%20Mon%E2%80%93Fri%209am-success)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+</div>
 
 ## Problem Description
 
@@ -190,3 +211,11 @@ Aggregates NOD count and financial metrics by city. Clustered by `county_name`.
 
 ### `mart_nods_by_lender`
 Aggregates NOD count, total loan exposure, and avg LTV by lender. Clustered by `county_name`.
+
+## Contributing
+
+Issues and pull requests are welcome. Please use the provided [issue templates](.github/ISSUE_TEMPLATE) and fill out the [pull request template](.github/PULL_REQUEST_TEMPLATE.md) so changes are easy to review.
+
+## License
+
+Released under the [MIT License](LICENSE).

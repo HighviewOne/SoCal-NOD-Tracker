@@ -1,0 +1,57 @@
+name: 🐞 Bug report
+description: Report something in the pipeline that isn't working as expected
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to file a bug! Please fill out the sections below.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component
+      description: Which part of the pipeline is involved?
+      options:
+        - Terraform (infrastructure)
+        - Ingestion scripts (bootstrap_load / daily_load)
+        - Kestra workflow
+        - dbt models
+        - Looker Studio dashboard
+        - Other / unsure
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug, including the error message if any.
+      placeholder: When I run `dbt run`, the mart_nods_by_city model fails with ...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run '...'
+        2. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Versions of relevant tools.
+      placeholder: |
+        - OS:
+        - Python:
+        - dbt-bigquery:
+        - Terraform:
+    validations:
+      required: false
