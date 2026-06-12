@@ -19,7 +19,7 @@ DATASET_ID  = "nod_raw"
 TABLE_ID    = "nods"
 NOD_DIR     = "/home/highview/retran"
 GCS_PREFIX  = "nods"
-DBT_DIR     = "/home/highview/DataEngineeringZoomcamp2026/project1/dbt"
+DBT_DIR     = "/home/highview/SoCal-NOD-Tracker/dbt"
 
 
 def main():
