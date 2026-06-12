@@ -49,7 +49,7 @@ This project ingests daily NOD filings from **6 Southern California counties** (
 Daily CSV files (retran/)
         │
         ▼
-  Kestra DAG (scheduled: 9am Mon–Fri)
+  cron: daily_load.py (9am Mon–Fri)
         │
         ├──► GCS Bucket  ──────────────── Data Lake
         │    gs://aiagentsintensive-nod-lake/nods/
@@ -71,13 +71,15 @@ Daily CSV files (retran/)
                    Looker Studio Dashboard
 ```
 
+The same flow is also available as a Kestra DAG (`kestra/nod_daily_pipeline.yml`) for teams that prefer a workflow orchestrator over cron.
+
 ## Technologies
 
 | Layer | Tool | Purpose |
 |-------|------|---------|
 | Cloud | Google Cloud Platform (GCP) | All infrastructure |
 | Infrastructure as Code | Terraform | Provision GCS + BigQuery |
-| Workflow Orchestration | Kestra | Schedule daily ingestion DAG |
+| Workflow Orchestration | cron (Kestra DAG optional) | Schedule daily ingestion |
 | Data Lake | Google Cloud Storage (GCS) | Store raw CSV files |
 | Data Warehouse | BigQuery | Store and query structured data |
 | Transformations | dbt (dbt-bigquery) | Staging + mart models |
@@ -108,9 +110,9 @@ Each record includes: property address, APN, owner name, loan amount, LTV ratio,
 │   └── outputs.tf
 ├── scripts/
 │   ├── bootstrap_load.py       # One-time historical backfill
-│   └── daily_load.py           # Daily incremental load (standalone)
+│   └── daily_load.py           # Daily incremental load (run by cron)
 ├── kestra/
-│   └── nod_daily_pipeline.yml  # Kestra workflow definition
+│   └── nod_daily_pipeline.yml  # Optional Kestra workflow definition
 └── dbt/
     ├── dbt_project.yml
     └── models/
@@ -182,9 +184,16 @@ Creates:
 
 ### Step 5 — Daily ingestion
 
-**Option A — Standalone script:**
+`scripts/daily_load.py` uploads one day's CSV to GCS, appends it to `nod_raw.nods`, and runs dbt. It can be invoked manually for any date:
+
 ```bash
 python3 scripts/daily_load.py 2026-03-28
+```
+
+**Option A — cron (used in production):** schedule the script for 9am Mon–Fri. Note the `PATH` prefix so cron can find `dbt` (typically installed in `~/.local/bin`):
+
+```cron
+0 9 * * 1-5 PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin python3 /path/to/SoCal-NOD-Tracker/scripts/daily_load.py >> /path/to/logs/nod_daily_load.log 2>&1
 ```
 
 **Option B — Kestra DAG:**
