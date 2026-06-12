@@ -10,7 +10,6 @@ An end-to-end data pipeline tracking **Notice of Default (NOD)** filings across 
 
 [![Google Cloud](https://img.shields.io/badge/Google_Cloud-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com)
 [![Terraform](https://img.shields.io/badge/Terraform-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io)
-[![Kestra](https://img.shields.io/badge/Kestra-7E3FFF?logo=kestra&logoColor=white)](https://kestra.io)
 [![BigQuery](https://img.shields.io/badge/BigQuery-669DF6?logo=googlebigquery&logoColor=white)](https://cloud.google.com/bigquery)
 [![dbt](https://img.shields.io/badge/dbt-FF694B?logo=dbt&logoColor=white)](https://www.getdbt.com)
 [![Looker Studio](https://img.shields.io/badge/Looker_Studio-F9AB00?logo=looker&logoColor=white)](https://lookerstudio.google.com)

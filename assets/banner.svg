@@ -52,15 +52,12 @@
       <rect width="104" height="30" rx="15" fill="#222b3a"/><text x="52"  y="20" text-anchor="middle" fill="#9bb6e8">Terraform</text>
     </g>
     <g transform="translate(270,278)">
-      <rect width="78"  height="30" rx="15" fill="#222b3a"/><text x="39"  y="20" text-anchor="middle" fill="#9bb6e8">Kestra</text>
-    </g>
-    <g transform="translate(358,278)">
       <rect width="96"  height="30" rx="15" fill="#222b3a"/><text x="48"  y="20" text-anchor="middle" fill="#9bb6e8">BigQuery</text>
     </g>
-    <g transform="translate(464,278)">
+    <g transform="translate(376,278)">
       <rect width="56"  height="30" rx="15" fill="#222b3a"/><text x="28"  y="20" text-anchor="middle" fill="#9bb6e8">dbt</text>
     </g>
-    <g transform="translate(530,278)">
+    <g transform="translate(442,278)">
       <rect width="116" height="30" rx="15" fill="#222b3a"/><text x="58"  y="20" text-anchor="middle" fill="#9bb6e8">Looker Studio</text>
     </g>
   </g>
