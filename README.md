@@ -212,7 +212,7 @@ Import `kestra/nod_daily_pipeline.yml` into your Kestra instance. The flow runs 
 ### `stg_nods` (view)
 Cleans and casts the raw table: parses dates in MM/DD/YY and MM/DD/YYYY formats, maps county codes to full names (XX → Unknown), normalizes city names to title case so aggregates don't split on casing, casts numeric fields, and selects only meaningful columns.
 
-A blank county code means Los Angeles by feed convention, but roughly 12% of blank-code rows carry zips in neighboring counties (e.g. San Diego 919xx–921xx, Coachella Valley 922xx). The staging model reassigns those by zip — broad prefix ranges for unambiguous blocks, plus explicit zip5 lists for county enclaves inside otherwise-LA prefixes (Orange pockets in 906xx/907xx, Thousand Oaks/Newbury Park in 913xx, Chino/Ontario/Rancho Cucamonga in 917xx). Rows with no zip and no code default to Los Angeles.
+A blank county code means Los Angeles by feed convention, but roughly 15% of blank-code rows carry zips in neighboring counties (e.g. San Diego 919xx–921xx, Coachella Valley 922xx). The staging model reassigns those by zip — broad prefix ranges for unambiguous blocks, plus explicit zip5 lists for county enclaves inside otherwise-LA prefixes (Orange pockets in 906xx/907xx, Thousand Oaks/Newbury Park in 913xx, Chino/Ontario/Rancho Cucamonga in 917xx). Rows with no zip and no code default to Los Angeles.
 
 ### `mart_nods_by_county_week`
 Aggregates NOD count, avg loan amount, avg LTV, and avg min bid per week per county. Partitioned by month on `week_start`, clustered by `county_name` for efficient time-range + county filter queries.
