@@ -7,11 +7,12 @@ profile: 'socal_nod'
 model-paths: ["models"]
 macro-paths: ["macros"]
 
+# Models build into the profile's target dataset (nod_production).
+# Do not add +dataset here: dbt concatenates it onto the target dataset
+# (producing e.g. nod_production_nod_production) rather than replacing it.
 models:
   socal_nod:
     staging:
       +materialized: view
-      +dataset: nod_production
     marts:
       +materialized: table
-      +dataset: nod_production

@@ -4,6 +4,11 @@ with source as (
     select * from {{ source('nod_raw', 'nods') }}
 ),
 
+prep as (
+    select *, substr(trim(Situs_Zip), 1, 5) as zip5
+    from source
+),
+
 cleaned as (
     select
         -- identifiers
@@ -11,21 +16,49 @@ cleaned as (
         document_number,
         county,
 
-        -- county label
-        case coalesce(county, '')
-            when ''   then 'Los Angeles'
-            when 'OC' then 'Orange'
-            when 'RI' then 'Riverside'
-            when 'SD' then 'San Diego'
-            when 'SR' then 'San Bernardino'
-            when 'VE' then 'Ventura'
-            else county
+        -- county label ('XX' = out-of-coverage/unknown in the source feed,
+        -- typically records with no situs address)
+        case
+            when coalesce(county, '') != '' then
+                case county
+                    when 'OC' then 'Orange'
+                    when 'RI' then 'Riverside'
+                    when 'SD' then 'San Diego'
+                    when 'SR' then 'San Bernardino'
+                    when 'VE' then 'Ventura'
+                    when 'XX' then 'Unknown'
+                    else county
+                end
+            -- Blank code means Los Angeles by feed convention, but ~12% of
+            -- blank rows carry zips in neighboring counties. Reassign the
+            -- unambiguous cases by zip; zip5 IN-lists cover county enclaves
+            -- inside otherwise-LA prefixes (906/907 Orange, 913 Ventura,
+            -- 917 San Bernardino/Riverside).
+            when zip5 between '91901' and '92199' then 'San Diego'
+            when zip5 = '91752' then 'Riverside'  -- Eastvale/Mira Loma
+            when zip5 in ('91701','91708','91709','91710','91729','91730',
+                          '91737','91739','91743','91758','91759','91761',
+                          '91762','91763','91764','91784','91785','91786')
+                then 'San Bernardino'  -- Chino, Ontario, Rancho Cucamonga, Upland
+            when zip5 between '92201' and '92299' then 'Riverside'
+            when zip5 between '92301' and '92499' then 'San Bernardino'
+            when zip5 between '92501' and '92599' then 'Riverside'
+            when zip5 = '92860' or zip5 between '92877' and '92883'
+                then 'Riverside'  -- Norco, Corona, Eastvale
+            when zip5 between '92601' and '92899' then 'Orange'
+            when zip5 in ('90620','90621','90622','90623','90624','90630',
+                          '90680','90720','90721','90740','90742','90743')
+                then 'Orange'  -- Buena Park, Cypress, La Palma, Los Alamitos, Seal Beach, Stanton
+            when zip5 in ('91319','91320','91358','91360','91361','91362','91377')
+                then 'Ventura'  -- Newbury Park, Thousand Oaks, Westlake Village, Oak Park
+            when zip5 between '93001' and '93099' then 'Ventura'
+            else 'Los Angeles'
         end                                                     as county_name,
 
         -- property location
         Situs_House                                             as property_house,
         Situs_Street                                            as property_street,
-        Situs_City                                              as property_city,
+        initcap(trim(Situs_City))                               as property_city,
         Situs_Zip                                               as property_zip,
         zoning,
         use_code,
@@ -60,7 +93,7 @@ cleaned as (
         latitude,
         longtitude                                              as longitude
 
-    from source
+    from prep
     where APN is not null
         and APN != 'APN'  -- skip header rows if any
 )
