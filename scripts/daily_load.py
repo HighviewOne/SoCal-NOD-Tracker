@@ -17,9 +17,9 @@ PROJECT_ID  = "aiagentsintensive"
 BUCKET_NAME = "aiagentsintensive-nod-lake"
 DATASET_ID  = "nod_raw"
 TABLE_ID    = "nods"
-NOD_DIR     = "/home/highview/retran"
+NOD_DIR     = "/home/highview/Projects/NOD-RealEstate/retran"
 GCS_PREFIX  = "nods"
-DBT_DIR     = "/home/highview/SoCal-NOD-Tracker/dbt"
+DBT_DIR     = "/home/highview/Projects/NOD-RealEstate/SoCal-NOD-Tracker/dbt"
 
 
 def main():

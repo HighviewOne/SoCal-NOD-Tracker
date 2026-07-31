@@ -21,7 +21,7 @@ variables:
   bucket: aiagentsintensive-nod-lake
   dataset: nod_raw
   table: nods
-  nod_dir: /home/highview/retran
+  nod_dir: /home/highview/Projects/NOD-RealEstate/retran
   dbt_dir: /home/highview/DataEngineeringZoomcamp2026/project1/dbt
 
 tasks:
