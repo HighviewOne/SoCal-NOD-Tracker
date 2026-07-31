@@ -76,11 +76,11 @@ cleaned as (
         min_bid,
         safe_cast(assessed_value as float64)                    as assessed_value,
 
-        -- lender
-        beneficiary_name                                        as lender_name,
+        -- lender/trustee (upper-cased: the feed is mostly caps already, and
+        -- casing variants of the same name must not split aggregates)
+        upper(trim(beneficiary_name))                           as lender_name,
 
-        -- trustee
-        trustee_name,
+        upper(trim(trustee_name))                               as trustee_name,
 
         -- dates (parse MM/DD/YY or MM/DD/YYYY)
         safe.parse_date('%m/%d/%y',  recording_date)            as recording_date,
