@@ -7,9 +7,11 @@ Usage:
     python3 daily_load.py [YYYY-MM-DD]
     If date is omitted, uses today.
 """
+import csv
 import sys
 import os
 import subprocess
+import tempfile
 from datetime import date
 from google.cloud import storage, bigquery
 
@@ -22,6 +24,26 @@ GCS_PREFIX  = "nods"
 DBT_DIR     = "/home/highview/Projects/NOD-RealEstate/SoCal-NOD-Tracker/dbt"
 
 
+def nod_only_copy(local_path):
+    """From 2026-10-19 the daily CSV has a trailing filing_kind column that tags
+    the Lis Pendens / HOA delinquency rows retran mixes into its NOD feed. The
+    BigQuery load is positional (autodetect=False), so upload a copy with NOD
+    rows only and the column dropped. Older files pass through unchanged."""
+    with open(local_path, newline="", encoding="utf-8", errors="replace") as f:
+        reader = csv.DictReader(f)
+        if "filing_kind" not in (reader.fieldnames or []):
+            return local_path, None
+        fields = [c for c in reader.fieldnames if c != "filing_kind"]
+        rows = list(reader)
+    keep = [r for r in rows if r.get("filing_kind", "NOD") in ("NOD", "")]
+    tmp = tempfile.NamedTemporaryFile("w", suffix=".csv", newline="", encoding="utf-8", delete=False)
+    with tmp:
+        w = csv.DictWriter(tmp, fieldnames=fields, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(keep)
+    return tmp.name, len(rows) - len(keep)
+
+
 def main():
     run_date = sys.argv[1] if len(sys.argv) > 1 else date.today().isoformat()
     local_path = f"{NOD_DIR}/RETRAN_NODs_{run_date}.csv"
@@ -30,12 +52,18 @@ def main():
         print(f"ERROR: {local_path} not found")
         sys.exit(1)
 
+    upload_path, dropped = nod_only_copy(local_path)
+    if dropped is not None:
+        print(f"Dropped {dropped} non-NOD row(s) (Lis Pendens / HOA delinquency)")
+
     # Step 1: Upload to GCS
     print(f"Uploading {local_path} to GCS...")
     gcs_client = storage.Client(project=PROJECT_ID)
     bucket = gcs_client.bucket(BUCKET_NAME)
     blob_name = f"{GCS_PREFIX}/RETRAN_NODs_{run_date}.csv"
-    bucket.blob(blob_name).upload_from_filename(local_path)
+    bucket.blob(blob_name).upload_from_filename(upload_path)
+    if upload_path != local_path:
+        os.unlink(upload_path)
     gcs_uri = f"gs://{BUCKET_NAME}/{blob_name}"
     print(f"  → {gcs_uri}")
 
