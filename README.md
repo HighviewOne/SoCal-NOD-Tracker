@@ -184,7 +184,7 @@ Creates:
 
 ### Step 5 — Daily ingestion
 
-`scripts/daily_load.py` uploads one day's CSV to GCS, appends it to `nod_raw.nods`, and runs dbt. It can be invoked manually for any date:
+`scripts/daily_load.py` uploads one day's CSV to GCS, appends it to `nod_raw.nods`, and runs dbt. Rows BigQuery would reject (wrong column count, non-numeric amounts) are set aside in `retran/bq_rejects/` so the rest of the day still loads, and each run ends with one timestamped `BQ LOAD OK|FAILED` line for monitoring. It can be invoked manually for any date:
 
 ```bash
 python3 scripts/daily_load.py 2026-03-28
